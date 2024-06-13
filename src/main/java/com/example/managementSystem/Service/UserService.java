@@ -29,39 +29,47 @@ public class UserService {
     public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
+
+
     public User createUser(UserDto userdto) {
 
         User email=userRepo.findByEmail(userdto.email());
+
      if(email!=null){
          throw new EmailAlreadyExists("Email Already Exists");
      }
+
         User user=new User();
         user.setFirstName(userdto.firstName());
         user.setLastName(userdto.lastName());
         user.setEmail(userdto.email());
         user.setPassword(userdto.password());
         user.setUsername(userdto.username());
+
         return userRepo.save(user);
     }
     public User findUserById(int id) {
         User user = userRepo.findById(id).orElseThrow(
                 ()->new NoUserExists("User","id",id)
-        )
-                ;
+        );
         return user;
     }
+
     public List<User> findall() {
         return  userRepo.findAll();
     }
+
     public User updateUser(int id, UserDto userDto) {
         User existingUser = userRepo.findById(id).orElseThrow(
                 ()->new NoUserExists("User","id",id)
         );
+
         existingUser.setFirstName(userDto.firstName());
         existingUser.setLastName(userDto.lastName());
         existingUser.setEmail(userDto.email());
         existingUser.setPassword(userDto.password());
         existingUser.setUsername(userDto.username());
+
         return userRepo.save(existingUser);
     }
 
@@ -69,6 +77,7 @@ public class UserService {
          userRepo.findById(id).orElseThrow(
                 ()->new NoUserExists("User","id",id)
         );
+         
         userRepo.deleteById(id);
         return "successfully deleted";
     }
